@@ -1,132 +1,91 @@
-# DS Labs — Firebase Hosting for AdMob app-ads.txt
+# DS Labs Public — Firebase Hosting and AdMob verification
 
-## DS Labs Public — project created (2026-10-21)
+**Current operational status: 2026-10-21, Europe/Rome (owner screenshots)**
 
-Firebase Console screenshots supplied by owner show **DS Labs Public** on the
-**Spark** plan, with proposed/project ID `ds-labs-public`.
-The GitHub repository now has `.firebaserc` pointing to that project.
-Project credentials are not available through this GitHub connection; Hosting
-deployment is still **NOT VERIFIED / NOT EXECUTED**.
+## Confirmed milestones
 
-### Simplest deployment from Google Cloud Shell (mobile or desktop)
+| Item | Status | Evidence |
+|---|---|---|
+| Firebase project | **CREATED** — `DS Labs Public`, project ID `ds-labs-public` | Firebase Console screenshot |
+| Plan | **Spark (free)** | Firebase Console screenshot |
+| Static Firebase Hosting deployment | **COMPLETE (owner Cloud Shell)** | CLI screenshot with `Deploy complete!` and Hosting URL |
+| Canonical Hosting domain | `https://ds-labs-public.web.app/` | Firebase Hosting dashboard/CLI |
+| AdMob `app-ads.txt` | Source staged in `firebase-site/app-ads.txt`; expected at hostname root | GitHub source and deployment command |
+| Google Play association | **LINKED** — ScanNexa `com.dslabs.scannexa` | AdMob app settings screenshot |
+| AdMob app verification | **SUCCEEDED** — `Verifica eseguita` and `La verifica ... è andata a buon fine` | AdMob verification screenshots at 23:43 |
+| AdMob advertising approval | **PENDING** — `In preparazione`; review reportedly ~2–3 days, not a guarantee | AdMob app settings/confirmation screenshots |
+| AdMob consent messages / UMP | **NOT RE-QUALIFIED here** | Existing Android qualification has UMP network failure |
+| AdMob ad delivery restrictions | **NOT YET LIFTED** | App approval not yet granted |
 
-The public repository can be cloned anonymously. Open Firebase Console, expand
-**Hosting e serverless → Hosting** if needed, then launch **Cloud Shell**
-from its terminal icon. Firebase documents Cloud Shell as pre-authenticated and
-having Firebase CLI preinstalled.
+Deployment and successful AdMob verification are based on screenshots supplied by the owner. A separate HTTP 200/content-type check of the live Firebase endpoint was not obtained through the current ChatGPT environment; do not claim independent live-server verification.
 
-Paste:
+## Public URLs and record
 
-```bash
-git clone --depth 1 https://github.com/joshuads1994-code/ds-labs-legal.git && cd ds-labs-legal && python3 tools/sync-firebase-site.py && firebase deploy --only hosting --project ds-labs-public
+- **Developer website (enter in Google Play):** `https://ds-labs-public.web.app/`
+- **AdMob seller list (root of hostname):** `https://ds-labs-public.web.app/app-ads.txt`
+- ScanNexa public privacy page: `https://ds-labs-public.web.app/privacy/scannexa/`
+- ArrowFlow public privacy page: `https://ds-labs-public.web.app/privacy/arrowflow/`
+- Legacy GitHub Pages policies: `https://joshuads1994-code.github.io/ds-labs-legal/privacy/scannexa/` and `.../privacy/arrowflow/` (still referenced by existing Android builds; do not break).
+
+Exact `app-ads.txt` line:
+
+```text
+google.com, pub-5743584111440579, DIRECT, f08c47fec0942fa0
 ```
 
-Do not run `firebase init hosting`: the configuration already exists.
-Do not enable billing/Blaze or create App Hosting; static Hosting is enough.
-If deploy returns that the default site is not initialized, open **Hosting →
-Get started** in the Firebase project and retry; do not alter unrelated
-resources. Check the exact URL printed at the end of a successful deployment.
+**Only this publisher is authorized in the current source.** Do not add ad sellers or modify it without confirming ownership.
 
-Verify `https://ds-labs-public.web.app/app-ads.txt` returns HTTP 200 and the
-AdMob record, then set `https://ds-labs-public.web.app/` as the developer
-website in ScanNexa's Google Play listing. Finally retry AdMob verification
-after Play has propagated the store listing update.
+## Architecture
 
----
+- Repository: `joshuads1994-code/ds-labs-legal` (main).
+- Firebase config: `firebase.json` uses `hosting.public = "firebase-site"`, not the repository root.
+- Project selection: `.firebaserc` defaults to `ds-labs-public`.
+- Canonical source pages: `index.html`, `app-ads.txt`, `privacy/scannexa/index.html`, `privacy/arrowflow/index.html`.
+- Deploy copies: corresponding allowlisted paths in `firebase-site/`.
+- Sync helper: `tools/sync-firebase-site.py`, verifies copied bytes and publisher record.
+- GitHub Pages legal site remains available; this deployment does not modify Aruba, `.htaccess`, Android code, Play releases, ads IDs or billing.
 
+**Do not use Firebase App Hosting or upgrade to Blaze.** The Spark static Hosting site is sufficient for the AdMob use case.
 
-Purpose: Publish a *public*, free DS Labs developer site containing
-`app-ads.txt` at the **hostname root** so Google AdMob can verify ScanNexa.
-This does **not** change Aruba, the Android app, signing, or GitHub Pages.
+## Deployment / updates
 
-## Status
-
-- Static contents and deployment configuration are prepared in this repository.
-- **Firebase project creation, account authorization and deployment have NOT been completed.**
-- The project ID and public URL are unknown until a Firebase project is created and deployed.
-- Existing GitHub Pages URL `https://joshuads1994-code.github.io/ds-labs-legal/`
-  is a *path-based* site. Its `/ds-labs-legal/app-ads.txt` is **not**
-  the `/app-ads.txt` path checked at the hostname root.
-- No GitHub Actions, merges, Android release changes, billing activation or paid services.
-
-## Firebase account setup (owner action)
-
-1. Open https://console.firebase.google.com/ with the intended Google account.
-2. Create a Firebase project (e.g. display name **DS Labs Public**).
-   Select the **Spark** plan; do not activate **Blaze** or billing.
-   A project ID must be confirmed by Firebase; do not assume an ID is available.
-3. Use **Firebase Hosting** (static hosting), not **Firebase App Hosting**.
-   The default free subdomain will be `https://<PROJECT_ID>.web.app`
-   once the project exists and Hosting is deployed.
-
-## Deploy from a trusted local Mac terminal
-
-Prerequisites: Firebase CLI (see https://firebase.google.com/docs/cli),
-Google sign-in, and an up-to-date local checkout of this repository.
+For future changes to canonical public pages, update the source files first, then from a trusted checkout:
 
 ```bash
+python3 tools/sync-firebase-site.py
+firebase deploy --only hosting --project ds-labs-public
+```
+
+Or on a new Cloud Shell checkout:
+
+```bash
+git clone --depth 1 https://github.com/joshuads1994-code/ds-labs-legal.git
 cd ds-labs-legal
 python3 tools/sync-firebase-site.py
-firebase login
-firebase projects:list
-firebase deploy --only hosting --project <PROJECT_ID>
+firebase deploy --only hosting --project ds-labs-public
 ```
 
-Replace `<PROJECT_ID>` with the **actual** Firebase project ID shown in
-the Firebase Console. Do not type the angle brackets. The CLI can also run
-in Google Cloud Shell if local installation is not convenient.
+Use a newly cloned directory or `git pull --ff-only` if an existing checkout has been updated safely. No changes should be deployed without reviewing the source; no public keys/passwords belong in the repo.
 
-The project has a committed `firebase.json`: do **not** run
-`firebase init hosting` and overwrite it. No `.firebaserc` is necessary
-because the deployment explicitly chooses the Firebase project ID.
+For a new DS Labs app, add its privacy page to the canonical sources, explicitly add its relative path to the allowlist and public index, sync, commit and redeploy. Do not add unrelated files to `firebase-site/`.
 
-The deploy directory is **only** `firebase-site/`, so private code,
-`README.md`, the Git repository metadata and source documentation cannot
-be accidentally published.
+## Remaining AdMob / Play work
 
-## Verify the live result BEFORE updating Play Console
+1. Keep the verified developer site `https://ds-labs-public.web.app/` in the public **ScanNexa Google Play** listing. Check it stays correct if the listing is edited.
+2. AdMob app `ScanNexa: QR & Barcode Scanner` is **verified**, but **approval remains `In preparazione`**. Wait for AdMob's review status/email; do not re-create the app or repeatedly restart verification.
+3. In AdMob **Privacy & messaging**, confirm an appropriate Google-certified CMP message is active for EEA/UK/Switzerland and applicable US states as needed. The AdMob screenshot advised this, but it did not prove publication or correct display on device.
+4. Use Google official TEST ad units for any implementation/runtime tests, **no live impression/click testing by family/developer devices**.
+5. Following approval, examine real AdMob request, match, impression, show, eCPM and policy-center metrics to plan low-disruption placements for ScanNexa 1.0.2. Historical tiny sample (2026-10-21): 24 requests, 2 impressions, 100% match, eCPM EUR 0.74; **not a revenue forecast**.
 
-After a successful deploy, inspect these exact URLs:
+## Source-of-truth and constraints
 
-- `https://<PROJECT_ID>.web.app/` — public DS Labs homepage.
-- `https://<PROJECT_ID>.web.app/app-ads.txt` — HTTP 200 with content:
-  `google.com, pub-5743584111440579, DIRECT, f08c47fec0942fa0`
-- `https://<PROJECT_ID>.web.app/privacy/scannexa/` — ScanNexa privacy.
-- `https://<PROJECT_ID>.web.app/privacy/arrowflow/` — ArrowFlow privacy.
+User's 2026-10-21 screens show a completed Firebase deploy and successful AdMob verification. These do not independently prove DNS, HTTP status, CMP display, unrestricted monetization, or Play Console public metadata. The earlier AdMob error said *developer website missing from Play listing*; the later success supersedes **that** verification blocker only.
 
-Verify the `app-ads.txt` response is `text/plain`, readable without
-authentication, not an HTML rewrite/redirect to a sign-in page.
-A 404 means Hosting was not deployed or the project/URL is wrong.
+No GitHub Actions were manually launched, no app binary was built, no merge was performed, no Play release was changed, and no new paid Firebase service was enabled as part of this documentation update.
 
-## Connect the public website to the Google Play listing
+## References
 
-1. Open Google Play Console, select ScanNexa.
-2. Go to **Grow users / Store presence / Store settings / Store listing contact details**.
-3. Set **Developer website** to exactly `https://<PROJECT_ID>.web.app/`.
-   Do not enter the `/app-ads.txt` path and do not use the old
-   GitHub Pages path, since its hostname root is different.
-4. Save, check the public Play listing's app-support developer website,
-   and allow time for Google to ingest the change.
-5. Open AdMob / ScanNexa / app verification. Select the existing
-   `com.dslabs.scannexa` Play listing, then choose the verification/
-   `Check for updates` action. AdMob reviews the site and subsequently
-   the app; immediate approval is not guaranteed.
-
-No new AdMob application or Android app update is required.
-
-## Maintenance
-
-Keep the existing root pages as canonical. After changing an existing privacy
-page or `app-ads.txt` record, run `python3 tools/sync-firebase-site.py`,
-commit both sources and public copies, and redeploy Hosting.
-
-For a new DS Labs app, add its publicly safe policy page to the source root
-and update the allowlist in the script. Only add an additional authorized ad
-seller if the corresponding publisher account and status justify it.
-
-## Official references
-
-- https://support.google.com/admob/answer/9820295
-- https://support.google.com/admob/answer/9363762
 - https://firebase.google.com/docs/hosting/quickstart
 - https://firebase.google.com/docs/cli
+- https://support.google.com/admob/answer/9820295
+- https://support.google.com/admob/answer/9363762
