@@ -1,5 +1,40 @@
 # DS Labs — Firebase Hosting for AdMob app-ads.txt
 
+## DS Labs Public — project created (2026-10-21)
+
+Firebase Console screenshots supplied by owner show **DS Labs Public** on the
+**Spark** plan, with proposed/project ID `ds-labs-public`.
+The GitHub repository now has `.firebaserc` pointing to that project.
+Project credentials are not available through this GitHub connection; Hosting
+deployment is still **NOT VERIFIED / NOT EXECUTED**.
+
+### Simplest deployment from Google Cloud Shell (mobile or desktop)
+
+The public repository can be cloned anonymously. Open Firebase Console, expand
+**Hosting e serverless → Hosting** if needed, then launch **Cloud Shell**
+from its terminal icon. Firebase documents Cloud Shell as pre-authenticated and
+having Firebase CLI preinstalled.
+
+Paste:
+
+```bash
+git clone --depth 1 https://github.com/joshuads1994-code/ds-labs-legal.git && cd ds-labs-legal && python3 tools/sync-firebase-site.py && firebase deploy --only hosting --project ds-labs-public
+```
+
+Do not run `firebase init hosting`: the configuration already exists.
+Do not enable billing/Blaze or create App Hosting; static Hosting is enough.
+If deploy returns that the default site is not initialized, open **Hosting →
+Get started** in the Firebase project and retry; do not alter unrelated
+resources. Check the exact URL printed at the end of a successful deployment.
+
+Verify `https://ds-labs-public.web.app/app-ads.txt` returns HTTP 200 and the
+AdMob record, then set `https://ds-labs-public.web.app/` as the developer
+website in ScanNexa's Google Play listing. Finally retry AdMob verification
+after Play has propagated the store listing update.
+
+---
+
+
 Purpose: Publish a *public*, free DS Labs developer site containing
 `app-ads.txt` at the **hostname root** so Google AdMob can verify ScanNexa.
 This does **not** change Aruba, the Android app, signing, or GitHub Pages.
