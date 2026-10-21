@@ -1,0 +1,20 @@
+{
+  "hosting": {
+    "public": "firebase-site",
+    "ignore": [
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "headers": [
+      {
+        "source": "/app-ads.txt",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600"
+          }
+        ]
+      }
+    ]
+  }
+}
