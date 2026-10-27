@@ -14,6 +14,7 @@ FILES = (
     "app-ads.txt",
     "privacy/scannexa/index.html",
     "privacy/arrowflow/index.html",
+    "privacy/card-reader/index.html",
 )
 
 for relative in FILES:
